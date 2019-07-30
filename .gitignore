@@ -10,6 +10,15 @@
 # Precompiled Headers
 *.gch
 *.pch
+*.ipch
+*.db
+*.suo
+*.tlog
+*.lastbuildstate
+*.pdb
+*.ipdb
+*.log
+*.iobj
 
 # Compiled Dynamic libraries
 *.so
