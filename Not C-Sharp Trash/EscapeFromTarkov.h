@@ -1,5 +1,8 @@
 #pragma once
-#include "Includes.h"
+#include <Windows.h>
+#include <windef.h>
+#include <TlHelp32.h>
+#include <iostream>
 
 #pragma warning (disable: 4996)
 
@@ -88,3 +91,5 @@ public:
 			return {};
 	}
 };
+
+Process EscapeFromTarkov(L"EscapeFromTarkov.exe", "EscapeFromTarkov.exe");

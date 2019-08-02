@@ -1,16 +1,35 @@
 #include "EscapeFromTarkov.h"
+#include "GameObjectManager.h"
+
+namespace Objects
+{
+	GameObjectManager GOM{ 0x0 };
+	GameWorld LocalGameWorld{0x0};
+}
+
+GameWorld FindLocalGameWorld()
+{
+	for (BaseObject ActiveObject = Objects::GOM.GetFirstActiveObject(); ActiveObject.Address != Objects::GOM.GetLastActiveObject().Address; ActiveObject = ActiveObject.GetNextBaseObject())
+	{
+		std::string ActiveObjectName = ActiveObject.GetGameObject().GetGameObjectName();
+		if (ActiveObjectName.find("GameWorld") != std::string::npos)
+		{
+			return ActiveObject.GetGameObject().GetLocalGameWorld();
+		}
+	}
+}
 
 int main()
 {
-	Process EscapeFromTarkov(L"EscapeFromTarkov.exe", "EscapeFromTarkov.exe");
-
 	printf("PID: %i\n", EscapeFromTarkov.PID);
 	printf("Handle: %i\n", (uint32_t)EscapeFromTarkov.hAccess);
 	printf("Base Address: %p\n", EscapeFromTarkov.BaseAddress);
 
-	uint64_t GOM = EscapeFromTarkov.ReadMemory<uint64_t>(EscapeFromTarkov.BaseAddress + 0x1432840);
+	Objects::GOM = EscapeFromTarkov.ReadMemory<uint64_t>(EscapeFromTarkov.BaseAddress + 0x1432840);
+	printf("GOM: %p\n", Objects::GOM.Address);
 
-	printf("GOM: %p\n", GOM);
+	Objects::LocalGameWorld = FindLocalGameWorld();
+	printf("Local Game World: %p\n", Objects::LocalGameWorld.Address);
 
 	system("pause");
 }
